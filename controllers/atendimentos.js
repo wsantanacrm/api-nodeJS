@@ -1,9 +1,10 @@
-const atendimentos = require('../models/atendimentos')
 const Atendimento = require('../models/atendimentos')
 
 module.exports = app =>  {
     app.get('/atendimentos', (req, res) => {
-        Atendimento.lista(res)
+        Atendimento.lista()
+            .then(resultados => res.status(200).json(resultados))
+            .catch(erros => res.status(400).json(erros))
     })
 
     app.get('/atendimentos/:id', (req, res) => {
@@ -17,7 +18,12 @@ module.exports = app =>  {
     app.post('/atendimentos', (req, res) => {
         //recupera body
         const atendimento = req.body
-        Atendimento.adiciona(atendimento, res)
+        console.log(atendimento);
+        Atendimento.adiciona(atendimento)
+            .then(atendimentoCadastrado => 
+            res.status(201).json(atendimentoCadastrado)
+            )
+            .catch(erros =>  res.status(400).json(erros))
         //console.log(req.body)
         //res.send('Enviando dados')
     })
